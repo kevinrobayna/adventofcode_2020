@@ -4,7 +4,7 @@ import java.util.stream.Collectors
 class Day1(
     private val values: List<Int>
 ) {
-    fun solve(): List<Pair<Int, Int>> {
+    fun solve(): Pair<Int, Int> {
         val pairs: MutableList<Pair<Int, Int>> = mutableListOf()
 
         for (outLoop in values.indices) {
@@ -20,11 +20,18 @@ class Day1(
         return pairs
             .filter { it.first + it.second == 2020 }
             .distinct()
+            .get(0)
     }
 }
 
 
 fun main() {
-    val solutions = Day1(listOf(1721, 979, 366, 299, 675, 1456)).solve()
-    println("solution = $solutions, x*y = ${solutions[0].first * solutions[0].second}")
+    val problem = Day1::class.java.getResource("day1.txt")
+        .readText()
+        .split('\n')
+        .stream()
+        .map { it.toInt() }
+        .collect(Collectors.toList())
+    val pair = Day1(problem).solve()
+    println("solution = $pair, x*y = ${pair.first * pair.second}")
 }
