@@ -5,14 +5,21 @@ class Day3(
     private val forest: List<List<String>>
 ) {
     companion object {
-        val TREE = "#"
-        val DOWN = 1
-        val RIGHT = 3
+        const val TREE = "#"
+        const val DOWN = 1
+        const val RIGHT = 3
     }
 
     fun solve(): Int {
-
-        return forest.size
+        var position = Pair(0, 0)
+        var treeCount = 0
+        for (levels in forest.indices) {
+            if (isTree(position.first, position.second)) {
+                treeCount++
+            }
+            position = next(position.first, position.second)
+        }
+        return treeCount
     }
 
     fun next(x: Int, y: Int): Pair<Int, Int> {

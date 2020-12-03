@@ -50,4 +50,10 @@ class Day3Test {
         Assert.assertEquals(4, nextJump.second)
         Assert.assertTrue(day3.isTree(nextJump.first, nextJump.second))
     }
+
+    @Test
+    fun example_problem_returns_expected_count_of_trees() {
+        val day3 = Day3(problem)
+        Assert.assertEquals(7, day3.solve())
+    }
 }
