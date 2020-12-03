@@ -1,10 +1,26 @@
 import java.util.stream.Collectors
 
+// https://adventofcode.com/2020/day/3
 class Day3(
-    private val map: List<List<String>>
+    private val forest: List<List<String>>
 ) {
+    companion object {
+        val TREE = "#"
+        val DOWN = 1
+        val RIGHT = 3
+    }
+
     fun solve(): Int {
-        return map.size
+
+        return forest.size
+    }
+
+    fun next(x: Int, y: Int): Pair<Int, Int> {
+        return Pair(x.plus(DOWN), y.plus(RIGHT) % forest[0].size)
+    }
+
+    fun isTree(x: Int, y: Int): Boolean {
+        return forest[x][y] == TREE
     }
 
 }

@@ -7,6 +7,7 @@ data class PolicyAndPassword(
     val password: String,
 )
 
+// https://adventofcode.com/2020/day/2
 class Day2(
     private val values: List<PolicyAndPassword>
 ) {
