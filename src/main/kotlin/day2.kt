@@ -26,6 +26,29 @@ class Day2(
     }
 }
 
+// https://adventofcode.com/2020/day/2
+class Day2Part2(
+    private val values: List<PolicyAndPassword>
+) {
+    fun solve(): Long {
+        return values
+            .stream()
+            .filter { checkPolicyPart2(it) }
+            .count()
+    }
+
+    private fun checkPolicyPart2(it: PolicyAndPassword): Boolean {
+        val part1 = it.password[it.min - 1].toString() == it.str
+        val part2 = it.password[it.max - 1].toString() == it.str
+        if (part1 && part2) {
+            return false
+        } else if (part1 || part2) {
+            return true
+        }
+        return false
+    }
+}
+
 /**
  * example of line 1-7 j: vrfjljjwbsv
  */
@@ -50,4 +73,7 @@ fun main() {
         .collect(Collectors.toList())
     val solution = Day2(problem).solve()
     println("solution = $solution")
+
+    val solutionPart2 = Day2Part2(problem).solve()
+    println("solutionPart2 = $solutionPart2")
 }
