@@ -40,7 +40,21 @@ class Day5(
             .collect(Collectors.toList())[0]
     }
 
-    fun calculateSeatId(boardingPass: BoardingPass): Long {
+    private fun calculateSeatId(boardingPass: BoardingPass): Long {
+        return calculateColumnNumber(boardingPass) * calculateRowNumber(boardingPass)
+    }
+
+    private fun calculateRowNumber(boardingPass: BoardingPass): Long {
+        if (boardingPass.row.isEmpty()){
+            return 1
+        }
+        return boardingPasses.stream().count()
+    }
+
+    private fun calculateColumnNumber(boardingPass: BoardingPass): Long {
+        if (boardingPass.seat.isEmpty()){
+            return 1
+        }
         return boardingPasses.stream().count()
     }
 }
