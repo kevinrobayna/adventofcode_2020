@@ -33,7 +33,11 @@ class Day5(
     private val boardingPasses: List<BoardingPass>,
 ) {
     fun solve(): Long {
-        return boardingPasses.stream().count()
+        return boardingPasses
+            .stream()
+            .map { calculateSeatId(it) }
+            .sorted()
+            .collect(Collectors.toList())[0]
     }
 
     fun calculateSeatId(boardingPass: BoardingPass): Long {
