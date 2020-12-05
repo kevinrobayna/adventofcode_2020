@@ -1,4 +1,5 @@
 import java.util.stream.Collectors
+import kotlin.math.roundToLong
 
 data class BoardingPass(
     val row: List<String>,
@@ -32,35 +33,74 @@ fun day5ProblemReader(string: String): List<BoardingPass> {
 class Day5(
     private val boardingPasses: List<BoardingPass>,
 ) {
-    fun solve(): Long {
+
+    companion object {
+        const val ROW_RANGE: Long = 128
+        const val COLUMN_RANGE: Long = 8
+    }
+
+    private fun calculateIds(): List<Long> {
         return boardingPasses
             .stream()
             .map { calculateSeatId(it) }
             .sorted()
-            .collect(Collectors.toList())[0]
+            .collect(Collectors.toList())
+    }
+
+    fun getHighestSeatId(): Long {
+        return calculateIds()[boardingPasses.size - 1]
+    }
+
+    fun getMySeat(): Long {
+        val ids = calculateIds()
+        var index = ids.size - 1
+        while ((ids[index] - ids[index - 1]) == 1L) {
+            index -= 1
+        }
+        return ids[index] - 1
     }
 
     private fun calculateSeatId(boardingPass: BoardingPass): Long {
-        return calculateColumnNumber(boardingPass) * calculateRowNumber(boardingPass)
+        return (calculateRowNumber(boardingPass) * COLUMN_RANGE) + calculateColumnNumber(boardingPass)
     }
 
     private fun calculateRowNumber(boardingPass: BoardingPass): Long {
-        if (boardingPass.row.isEmpty()){
+        if (boardingPass.row.isEmpty()) {
             return 1
         }
-        return boardingPasses.stream().count()
+        return calculateNumber(boardingPass.row, ROW_RANGE, BoardingPass.BACK)
     }
 
     private fun calculateColumnNumber(boardingPass: BoardingPass): Long {
-        if (boardingPass.seat.isEmpty()){
+        if (boardingPass.seat.isEmpty()) {
             return 1
         }
-        return boardingPasses.stream().count()
+        return calculateNumber(boardingPass.seat, COLUMN_RANGE, BoardingPass.RIGHT)
+    }
+
+    private fun calculateNumber(list: List<String>, endRange: Long, upHalfChar: String): Long {
+        var startPost: Long = 0
+        var endPosition: Long = endRange.minus(1)
+        for (character in list) {
+            if (endPosition - startPost == 1L) {
+                if (character == upHalfChar) {
+                    return endPosition
+                }
+                return startPost
+            }
+            if (character == upHalfChar) {
+                startPost = (((endPosition - startPost) / 2.0) + startPost).roundToLong()
+            } else {
+                endPosition = ((endPosition - startPost) / 2) + startPost
+            }
+        }
+        return startPost
     }
 }
 
 
 fun main() {
     val problem = day5ProblemReader(Day4::class.java.getResource("day5.txt").readText())
-    println("solution = ${Day5(problem).solve()}")
+    println("solution = ${Day5(problem).getHighestSeatId()}")
+    println("solution = ${Day5(problem).getMySeat()}")
 }
