@@ -1,23 +1,25 @@
 import java.util.stream.Collectors
 
-fun day6ProblemReader(string: String): List<Set<String>> {
+fun day6ProblemReader(string: String): List<List<Set<String>>> {
     val problemSplit = string.split("\n")
-    val problem = mutableListOf<Set<String>>()
-    var group = mutableSetOf<String>()
+    val problem = mutableListOf<List<Set<String>>>()
+    var group = mutableListOf<Set<String>>()
     for (lineCount in problemSplit.indices) {
         val line = problemSplit[lineCount]
         if (line.isNotBlank()) {
+            val individualVotes = mutableSetOf<String>()
             line.split("").forEach {
                 if (it.isNotBlank()) {
-                    group.add(it)
+                    individualVotes.add(it)
                 }
             }
+            group.add(individualVotes)
         }
 
         val isLastLine = lineCount == (problemSplit.size - 1)
         if (line.isBlank() || isLastLine) {
             problem.add(group)
-            group = mutableSetOf()
+            group = mutableListOf()
             continue
         }
     }
@@ -27,13 +29,19 @@ fun day6ProblemReader(string: String): List<Set<String>> {
 
 // https://adventofcode.com/2020/day/6
 class Day6(
-    private val quiz: List<Set<String>>,
+    private val quiz: List<List<Set<String>>>,
 ) {
 
-    fun solve(): Long {
+    fun solveAnyone(): Long {
         return quiz
             .stream()
-            .map { it.size.toLong() }
+            .map { personResponses ->
+                val responses = mutableSetOf<String>()
+                personResponses.forEach {
+                    responses.addAll(it)
+                }
+                responses
+            }.map { it.size.toLong() }
             .collect(Collectors.toList())
             .sum()
     }
@@ -42,5 +50,5 @@ class Day6(
 
 fun main() {
     val problem = day6ProblemReader(Day6::class.java.getResource("day6.txt").readText())
-    println("solution = ${Day6(problem).solve()}")
+    println("solution = ${Day6(problem).solveAnyone()}")
 }
