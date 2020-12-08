@@ -29,7 +29,4 @@ class Day7Test {
         Assert.assertEquals(126, Day7(problem).solvePartTwo())
     }
 
-
-
-
 }
