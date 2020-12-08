@@ -44,32 +44,6 @@ class Day7(
     }
 
     fun solveAtLeastOneGold(): Int {
-        //        val bagsWhichContainGold = mutableListOf<String>()
-//        bagsWhichContainGold.addAll(bags.entries
-//            .filter { entry ->
-//                entry.value
-//                    .filter { it.tag.contains(GOLD) }
-//                    .toList()
-//                    .isNotEmpty()
-//            }
-//            .map { entry -> entry.key }
-//            .toSet()
-//        )
-//
-//        val bagsToProcess = mutableListOf<String>()
-//        bagsToProcess.addAll(bags.keys)
-//
-//        while (bagsToProcess.isNotEmpty()) {
-//            val bag = bagsToProcess.removeAt(0)
-//            bags.getOrDefault(bag, listOf()).forEach {
-//                if (bagsWhichContainGold.contains(it.tag)) {
-//                    bagsWhichContainGold.add(bag)
-//                }
-//                bagsToProcess.add(it.tag)
-//            }
-//        }
-//
-//        return bagsWhichContainGold.size.toLong()
         val isGold = mutableMapOf<String, Lazy<Boolean>>()
         for ((key: String, items: List<Bag>) in bags) {
             isGold[key] = lazy(LazyThreadSafetyMode.NONE) {
@@ -79,9 +53,23 @@ class Day7(
         return isGold.values.count { it.value }
     }
 
+    fun solvePartTwo(): Int {
+        var sum = 0
+        val deque = ArrayDeque(bags[GOLD].orEmpty())
+        while (deque.isNotEmpty()) {
+            val bag = deque.removeFirst()
+            sum += bag.count
+            bags[bag.tag]?.forEach { subBag: Bag ->
+                deque.add(Bag(subBag.tag, (bag.count * subBag.count)))
+            }
+        }
+        return sum
+    }
+
 }
 
 fun main() {
     val problem = day7ProblemReader(Day6::class.java.getResource("day7.txt").readText())
     println("solution = ${Day7(problem).solveAtLeastOneGold()}")
+    println("solution part2 = ${Day7(problem).solvePartTwo()}")
 }
