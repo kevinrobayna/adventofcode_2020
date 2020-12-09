@@ -23,5 +23,13 @@ class Day8Test {
         Assert.assertEquals(5, solution)
     }
 
+    @Test
+    fun exampleProblem_Part2_is_solvedCorrectly() {
+        val problem = day8ProblemReader(exampleProblemString)
+        val solution = Day8(problem).solvePart2()
+
+        Assert.assertEquals(8, solution)
+    }
+
 
 }

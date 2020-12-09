@@ -35,12 +35,32 @@ class Day8(
         return acc
     }
 
+    fun solvePart2(): Int {
+        for (index in code.indices) {
+            if (code[index].operation == Instruction.ACC) {
+                continue
+            }
+            val mutatedCode = code.toMutableList()
+            if (code[index].operation == Instruction.NOP) {
+                mutatedCode[index] = Instruction(Instruction.JUMP, code[index].positive, code[index].amount)
+            } else {
+                mutatedCode[index] = Instruction(Instruction.NOP, code[index].positive, code[index].amount)
+            }
+            val (visited: List<Int>, acc: Int) = executeCode(mutatedCode)
+            val isLoop = visited.filter { it == 2 }.count() != 0
+            if (!isLoop) {
+                return acc
+            }
+        }
+        return 0
+    }
+
     private fun executeCode(instructions: List<Instruction>): Pair<List<Int>, Int> {
         var acc = 0
         val visited = instructions.map { 0 }.toMutableList()
         var index = 0
-        while (visited[index] <= 1) {
-            visited[index] += 1
+        visited[index] = 1
+        while (visited[index] == 1) {
             val instruction = instructions[index]
             when (instruction.operation) {
                 Instruction.ACC -> {
@@ -53,6 +73,9 @@ class Day8(
                 Instruction.NOP -> {
                     index += 1
                 }
+            }
+            if (index == visited.size){
+                return Pair(visited, acc)
             }
             visited[index] += 1
         }
@@ -72,4 +95,5 @@ class Day8(
 fun main() {
     val problem = day8ProblemReader(Day6::class.java.getResource("day8.txt").readText())
     println("solution = ${Day8(problem).solvePart1()}")
+    println("solution part 2 = ${Day8(problem).solvePart2()}")
 }
