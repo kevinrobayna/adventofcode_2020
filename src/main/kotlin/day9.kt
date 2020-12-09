@@ -14,7 +14,7 @@ class Day9(
 
     fun solvePart1(): Long {
         for (inx in preamble..numbers.size) {
-            val previousFile = numbers.slice((inx-preamble)..inx)
+            val previousFile = numbers.slice((inx - preamble)..inx)
             if (!calculateAllCombinations(previousFile).contains(numbers[inx])) {
                 return numbers[inx]
             }
@@ -34,9 +34,31 @@ class Day9(
         return additions;
     }
 
+    fun solvePart2(): Long {
+        val numberToCheck = solvePart1()
+        var numbersToAdd = mutableListOf<Long>()
+
+        for (inx in 1..numbers.size) {
+            inner@ for (x in inx..numbers.size) {
+                numbersToAdd.add(numbers[x])
+                val addition = numbersToAdd.sum()
+                if (addition > numberToCheck) {
+                    numbersToAdd = mutableListOf()
+                    break@inner
+                } else if (addition == numberToCheck) {
+                    val sortedList : List<Long> = numbersToAdd.sorted()
+                    return sortedList[0] + sortedList[sortedList.size - 1]
+                }
+            }
+        }
+        return 0
+    }
+
+
 }
 
 fun main() {
     val problem = day9ProblemReader(Day9::class.java.getResource("day9.txt").readText())
     println("solution = ${Day9(problem, 25).solvePart1()}")
+    println("solution = ${Day9(problem, 25).solvePart2()}")
 }
