@@ -15,30 +15,12 @@ class Day8Test {
         Assert.assertEquals(Instruction(Instruction.ACC, false, 99), problem[5])
     }
 
-    data class Instruction(
-        val instruction: String,
-        val positive: Boolean,
-        val amount: Int
-    ) {
-        companion object {
-            const val NOP = "nop"
-            const val ACC = "acc"
-            const val JUMP = "jmp"
-        }
-    }
+    @Test
+    fun exampleProblem_is_solvedCorrectly() {
+        val problem = day8ProblemReader(exampleProblemString)
+        val solution = Day8(problem).solvePart1()
 
-    fun day8ProblemReader(string: String): List<Instruction> {
-        val instructionRegex = """(\w+)\s(\+|\-)(\d+)""".toRegex()
-        return string
-            .split("\n")
-            .map { line ->
-                val (instruction, signStr, amount) = instructionRegex.matchEntire(line)!!.destructured
-                if (signStr == "+") {
-                    Instruction(instruction, true, amount.toInt())
-                } else {
-                    Instruction(instruction, false, amount.toInt())
-                }
-            }.toList()
+        Assert.assertEquals(5, solution)
     }
 
 
