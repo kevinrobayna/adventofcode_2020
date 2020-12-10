@@ -41,7 +41,7 @@ class Day10Test {
     @Test
     fun smallExampleProblem_part2_is_solvedCorrectly() {
         val problem = day10ProblemReader(smallProblemString)
-        val solution = Day10(problem).solvePart2_memoized()
+        val solution = Day10(problem).solvePart2()
 
         Assert.assertEquals(8, solution)
     }
@@ -49,7 +49,7 @@ class Day10Test {
     @Test
     fun exampleProblem_part2_is_solvedCorrectly() {
         val problem = day10ProblemReader(exampleProblemString)
-        val solution = Day10(problem).solvePart2_memoized()
+        val solution = Day10(problem).solvePart2()
 
         Assert.assertEquals(19208, solution)
     }

@@ -14,31 +14,16 @@ class Day10(
 ) {
 
     fun solvePart1(): Int {
-        val goToList = numbers.toMutableList()
-        val n1 = mutableListOf<Int>()
-        val n3 = mutableListOf<Int>()
-        var pointer = 0
-
-        while (goToList.isNotEmpty()) {
-            pointer += when {
-                numbers.contains(pointer.plus(1)) -> {
-                    n1.add(pointer)
-                    goToList.remove(pointer)
-                    1
-                }
-                numbers.contains(pointer.plus(3)) -> {
-                    n3.add(pointer)
-                    goToList.remove(pointer)
-                    3
-                }
-                else -> {
-                    n3.add(pointer)
-                    goToList.remove(pointer)
-                    3
-                }
+        var n1 = 0
+        var n3 = 0
+        numbers.sorted().fold(0) { a, b ->
+            when (b - a) {
+                1 -> n1++
+                3 -> n3++
             }
+            b
         }
-        return n1.size * n3.size
+        return n1 * (n3 + 1)
     }
 
     // This does not work on big set
@@ -55,7 +40,7 @@ class Day10(
                     solutions += 1L
                 }
                 for (x in 1..3) {
-                    if (numbers.contains(maxVal.plus(x))){
+                    if (numbers.contains(maxVal.plus(x))) {
                         val newSolution = solution.toMutableList()
                         newSolution.add(maxVal.plus(x))
                         solutionsToExplore.add(newSolution)
@@ -67,7 +52,15 @@ class Day10(
     }
 
     fun solvePart2(): Long {
-        return 0L
+        val k = longArrayOf(1, 0, 0, 0)
+        numbers.sorted().fold(0) { a, b ->
+            val d = b - a
+            k.copyInto(k, d, 0, k.size - d)
+            k.fill(0, 0, d)
+            k[0] += k.sum()
+            b
+        }
+        return k[0]
     }
 
 
