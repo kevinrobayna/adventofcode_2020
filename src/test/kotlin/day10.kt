@@ -23,11 +23,35 @@ class Day10Test {
     }
 
     @Test
+    fun smallExampleProblem_part2_bruteForce_is_solvedCorrectly() {
+        val problem = day10ProblemReader(smallProblemString)
+        val solution = Day10(problem).solvePart2_naive()
+
+        Assert.assertEquals(8, solution)
+    }
+
+    @Test
+    fun exampleProblem_part2_bruteForce_is_solvedCorrectly() {
+        val problem = day10ProblemReader(exampleProblemString)
+        val solution = Day10(problem).solvePart2_naive()
+
+        Assert.assertEquals(19208, solution)
+    }
+
+    @Test
+    fun smallExampleProblem_part2_is_solvedCorrectly() {
+        val problem = day10ProblemReader(smallProblemString)
+        val solution = Day10(problem).solvePart2_memoized()
+
+        Assert.assertEquals(8, solution)
+    }
+
+    @Test
     fun exampleProblem_part2_is_solvedCorrectly() {
         val problem = day10ProblemReader(exampleProblemString)
-        val solution = Day10(problem).solvePart2()
+        val solution = Day10(problem).solvePart2_memoized()
 
-        Assert.assertEquals(0, solution)
+        Assert.assertEquals(19208, solution)
     }
 
 }

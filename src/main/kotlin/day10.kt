@@ -1,3 +1,5 @@
+import java.util.*
+
 fun day10ProblemReader(string: String): List<Int> {
     return string
         .split("\n")
@@ -39,8 +41,33 @@ class Day10(
         return n1.size * n3.size
     }
 
+    // This does not work on big set
+    fun solvePart2_naive(): Long {
+        val max = numbers.maxOrNull()!!.plus(3)
+        var solutions = 0L
+        val solutionsToExplore: Queue<List<Int>> = LinkedList()
+        solutionsToExplore.add(listOf(0))
+        do {
+            val solution = solutionsToExplore.remove()
+            val maxVal = solution.maxOrNull()
+            if (maxVal != null) {
+                if (max == maxVal.plus(3)) {
+                    solutions += 1L
+                }
+                for (x in 1..3) {
+                    if (numbers.contains(maxVal.plus(x))){
+                        val newSolution = solution.toMutableList()
+                        newSolution.add(maxVal.plus(x))
+                        solutionsToExplore.add(newSolution)
+                    }
+                }
+            }
+        } while (solutionsToExplore.isNotEmpty())
+        return solutions
+    }
+
     fun solvePart2(): Long {
-        return 0
+        return 0L
     }
 
 
