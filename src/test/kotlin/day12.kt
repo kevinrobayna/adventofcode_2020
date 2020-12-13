@@ -19,7 +19,7 @@ class Day12Test {
         val problem = day12ProblemReader(exampleProblemString)
         val solution = Day12(problem).solvePart2()
 
-        Assert.assertEquals(0, solution)
+        Assert.assertEquals(286, solution)
     }
 
 }

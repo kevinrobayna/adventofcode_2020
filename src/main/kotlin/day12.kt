@@ -60,7 +60,38 @@ class Day12(
     }
 
     fun solvePart2(): Int {
-        return 0
+        var (dx, dy) = Pair(10, 1)
+        var (x, y) = Pair(0, 0)
+        for ((change, amount) in actions) {
+            when (change in MOVEMENTS) {
+                true -> {
+                    when (change) {
+                        NORTH -> dy += amount
+                        SOUTH -> dy -= amount
+                        EAST -> dx += amount
+                        WEST -> dx -= amount
+                        FORWARD -> {
+                            x += dx * amount
+                            y += dy * amount
+                        }
+                    }
+                }
+                else -> {
+                    when (amount) {
+                        90 -> when (change) {
+                            LEFT -> dx = -dy.also { dy = dx }
+                            RIGHT -> dy = -dx.also { dx = dy }
+                        }
+                        180 -> dx = -dx.also { dy = -dy }
+                        270 -> when (change) {
+                            LEFT -> dy = -dx.also { dx = dy }
+                            RIGHT -> dx = -dy.also { dy = dx }
+                        }
+                    }
+                }
+            }
+        }
+        return abs(x) + abs(y)
     }
 }
 
