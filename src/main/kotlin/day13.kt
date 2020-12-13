@@ -1,3 +1,5 @@
+import java.lang.Math.floorMod
+
 fun day13ProblemReader(text: String): Pair<Int, List<String>> {
     val lines = text.split('\n')
     return Pair(
@@ -26,8 +28,30 @@ class Day13(
         } else 0
     }
 
-    fun solvePart2(): Int {
-        return 0
+    // i do not fully understand this
+    // source https://github.com/ephemient/aoc2020/blob/main/kt/src/main/kotlin/io/github/ephemient/aoc2020/Day13.kt
+    fun solvePart2(): Long {
+        val (_, schedule) = problem
+        return schedule.withIndex()
+            .filter { (_, id) -> id != "x" }
+            .map { (inx, id) -> inx to id.toInt() }
+            .map { (inx, id) -> floorMod(-inx, id).toLong() to id.toLong() }
+            .fold(0L to 1L) { (r1, q1), (r2, q2) ->
+                crt(r1, q1, r2, q2)
+            }.first
+    }
+
+    private fun crt(r1: Long, q1: Long, r2: Long, q2: Long): Pair<Long, Long> {
+        var a = r1
+        var b = r2
+        while (a != b) {
+            if (a < b) {
+                a += (b - a + q1 - 1) / q1 * q1
+            } else {
+                b += (a - b + q2 - 1) / q2 * q2
+            }
+        }
+        return a to q1 * q2
     }
 }
 
