@@ -12,7 +12,18 @@ class Day13(
 ) {
 
     fun solvePart1(): Int {
-        return 0
+        val (target, schedule) = problem
+        val ids = schedule.filter { it != "x" }
+        val nextDeparture = ids.map {
+            val id = it.toDouble()
+            val lastDeparture = target % id
+            ((target - lastDeparture) + id - target)
+        }
+        val minutesToNextBus = nextDeparture.minOrNull()
+
+        return if (minutesToNextBus != null) {
+            (minutesToNextBus.toInt() * ids[nextDeparture.indexOf(minutesToNextBus)].toInt())
+        } else 0
     }
 
     fun solvePart2(): Int {
