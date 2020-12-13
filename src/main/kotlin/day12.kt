@@ -25,51 +25,36 @@ class Day12(
     }
 
     fun solvePart1(): Int {
-        var (dx, dy) = Pair(1, 0)
-        var (x, y) = Pair(0, 0)
-        for ((change, amount) in actions) {
-            when (change in MOVEMENTS) {
-                true -> {
-                    when (change) {
-                        NORTH -> y += amount
-                        SOUTH -> y -= amount
-                        EAST -> x += amount
-                        WEST -> x -= amount
-                        FORWARD -> {
-                            x += dx * amount
-                            y += dy * amount
-                        }
-                    }
-                }
-                else -> {
-                    when (amount) {
-                        90 -> when (change) {
-                            LEFT -> dx = -dy.also { dy = dx }
-                            RIGHT -> dy = -dx.also { dx = dy }
-                        }
-                        180 -> dx = -dx.also { dy = -dy }
-                        270 -> when (change) {
-                            LEFT -> dy = -dx.also { dx = dy }
-                            RIGHT -> dx = -dy.also { dy = dx }
-                        }
-                    }
-                }
-            }
-        }
-        return abs(x) + abs(y)
+        return solve(Pair(1, 0), false)
     }
 
     fun solvePart2(): Int {
-        var (dx, dy) = Pair(10, 1)
+        return solve(Pair(10, 1), true)
+    }
+
+    private fun solve(direction: Pair<Int, Int> = Pair(1, 0), waypoint: Boolean = false): Int {
+        var (dx, dy) = direction
         var (x, y) = Pair(0, 0)
         for ((change, amount) in actions) {
             when (change in MOVEMENTS) {
                 true -> {
                     when (change) {
-                        NORTH -> dy += amount
-                        SOUTH -> dy -= amount
-                        EAST -> dx += amount
-                        WEST -> dx -= amount
+                        NORTH -> {
+                            if (waypoint) dy += amount
+                            else y += amount
+                        }
+                        SOUTH -> {
+                            if (waypoint) dy -= amount
+                            else y -= amount
+                        }
+                        EAST -> {
+                            if (waypoint) dx += amount
+                            else x += amount
+                        }
+                        WEST -> {
+                            if (waypoint) dx -= amount
+                            else x -= amount
+                        }
                         FORWARD -> {
                             x += dx * amount
                             y += dy * amount

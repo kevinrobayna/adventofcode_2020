@@ -13,7 +13,6 @@ class Day12Test {
         Assert.assertEquals(25, solution)
     }
 
-
     @Test
     fun exampleProblem_part2_is_solvedCorrectly() {
         val problem = day12ProblemReader(exampleProblemString)
