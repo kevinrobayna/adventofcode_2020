@@ -69,11 +69,11 @@ class Day11(
 
     private fun exploreNeighbours(map: List<List<String>>, x: Int, y: Int): List<String> {
         return neighbours.map { (i, j) ->
-            findFarSeat(map, Pair(x, y), Pair(i, j))
+            findSeat(map, Pair(x, y), Pair(i, j))
         }
     }
 
-    private fun findFarSeat(map: List<List<String>>, current: Pair<Int, Int>, next: Pair<Int, Int>): String {
+    private fun findSeat(map: List<List<String>>, current: Pair<Int, Int>, next: Pair<Int, Int>): String {
         val (x, y) = current
         val (i, j) = next
         val seat = listOf(FREE, OCCUPIED)
@@ -82,7 +82,7 @@ class Day11(
         else {
             if (!lookFar) map[x + i][y + j]
             else if (map[x + i][y + j] in seat) map[x + i][y + j]
-            else findFarSeat(map, Pair(x + i, y + j), Pair(i, j))
+            else findSeat(map, Pair(x + i, y + j), Pair(i, j))
         }
     }
 
