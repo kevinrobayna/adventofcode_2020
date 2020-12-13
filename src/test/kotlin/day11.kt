@@ -8,7 +8,7 @@ class Day11Test {
     @Test
     fun exampleProblem_is_solvedCorrectly() {
         val problem = day11ProblemReader(exampleProblemString)
-        val solution = Day11(problem).solvePart1()
+        val solution = Day11(problem, 4, false).solve()
 
         Assert.assertEquals(37, solution)
     }
@@ -17,7 +17,7 @@ class Day11Test {
     @Test
     fun exampleProblem_part2_is_solvedCorrectly() {
         val problem = day11ProblemReader(exampleProblemString)
-        val solution = Day11(problem).solvePart2()
+        val solution = Day11(problem, 5, true).solve()
 
         Assert.assertEquals(26, solution)
     }

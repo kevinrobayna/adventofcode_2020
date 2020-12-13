@@ -14,7 +14,9 @@ fun day11ProblemReader(text: String): List<List<String>> = text
 
 // https://adventofcode.com/2020/day/11
 class Day11(
-    private val seats: List<List<String>>
+    private val seats: List<List<String>>,
+    private val threshold: Int,
+    private val lookFar: Boolean = false
 ) {
     companion object {
         const val FREE = "L"
@@ -32,7 +34,7 @@ class Day11(
         )
     }
 
-    fun solvePart1(): Int {
+    fun solve(): Int {
         var changes: Int
         var originalSeats: MutableList<MutableList<String>> = seats.map { it.toMutableList() }.toMutableList()
         var seatsToChange: MutableList<MutableList<String>>
@@ -54,7 +56,7 @@ class Day11(
 
                     // rule n2
                     val usedSeats = adjacentSeats.filter { it in listOf(OCCUPIED) }.size
-                    if (originalSeats[row][column] == OCCUPIED && usedSeats >= 4) {
+                    if (originalSeats[row][column] == OCCUPIED && usedSeats >= threshold) {
                         seatsToChange[row][column] = FREE
                         changes += 1
                     }
@@ -67,47 +69,6 @@ class Day11(
 
     private fun exploreNeighbours(map: List<List<String>>, x: Int, y: Int): List<String> {
         return neighbours.map { (i, j) ->
-            if (x + i < 0 || y + j < 0) FLOOR
-            else if (x + i > map.size - 1 || y + j > map[0].size - 1) FLOOR
-            else map[x + i][y + j]
-        }
-    }
-
-    fun solvePart2(): Int {
-        var changes: Int
-        var originalSeats: MutableList<MutableList<String>> = seats.map { it.toMutableList() }.toMutableList()
-        var seatsToChange: MutableList<MutableList<String>>
-        do {
-            changes = 0
-            seatsToChange = originalSeats.map { it.toMutableList() }.toMutableList()
-            for (row in seats.indices) {
-                for (column in seats[row].indices) {
-                    if (originalSeats[row][column] == FLOOR) {
-                        continue
-                    }
-                    val adjacentSeats = exploreFarNeighbours(originalSeats, row, column)
-                    // rule n1
-                    val emptySeats = adjacentSeats.filter { it in listOf(FLOOR, FREE) }.size
-                    if (originalSeats[row][column] == FREE && emptySeats == neighbours.size) {
-                        seatsToChange[row][column] = OCCUPIED
-                        changes += 1
-                    }
-
-                    // rule n2
-                    val usedSeats = adjacentSeats.filter { it in listOf(OCCUPIED) }.size
-                    if (originalSeats[row][column] == OCCUPIED && usedSeats >= 5) {
-                        seatsToChange[row][column] = FREE
-                        changes += 1
-                    }
-                }
-            }
-            originalSeats = seatsToChange.map { it.toMutableList() }.toMutableList()
-        } while (changes != 0)
-        return originalSeats.map { line -> line.filter { it == OCCUPIED }.count() }.sum()
-    }
-
-    private fun exploreFarNeighbours(map: List<List<String>>, x: Int, y: Int): List<String> {
-        return neighbours.map { (i, j) ->
             findFarSeat(map, Pair(x, y), Pair(i, j))
         }
     }
@@ -118,14 +79,17 @@ class Day11(
         val seat = listOf(FREE, OCCUPIED)
         return if (x + i < 0 || y + j < 0) FLOOR
         else if (x + i > map.size - 1 || y + j > map[0].size - 1) FLOOR
-        else if (map[x + i][y + j] in seat) map[x + i][y + j]
-        else findFarSeat(map, Pair(x + i, y + j), Pair(i, j))
+        else {
+            if (!lookFar) map[x + i][y + j]
+            else if (map[x + i][y + j] in seat) map[x + i][y + j]
+            else findFarSeat(map, Pair(x + i, y + j), Pair(i, j))
+        }
     }
 
 }
 
 fun main() {
     val problem = day11ProblemReader(Day10::class.java.getResource("day11.txt").readText())
-    println("solution = ${Day11(problem).solvePart1()}")
-    println("solution part2 = ${Day11(problem).solvePart2()}")
+    println("solution = ${Day11(problem, 4).solve()}")
+    println("solution part2 = ${Day11(problem, 5, true).solve()}")
 }
