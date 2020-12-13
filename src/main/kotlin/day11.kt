@@ -74,7 +74,52 @@ class Day11(
     }
 
     fun solvePart2(): Int {
-        return 0
+        var changes: Int
+        var originalSeats: MutableList<MutableList<String>> = seats.map { it.toMutableList() }.toMutableList()
+        var seatsToChange: MutableList<MutableList<String>>
+        do {
+            changes = 0
+            seatsToChange = originalSeats.map { it.toMutableList() }.toMutableList()
+            for (row in seats.indices) {
+                for (column in seats[row].indices) {
+                    if (originalSeats[row][column] == FLOOR) {
+                        continue
+                    }
+                    val adjacentSeats = exploreFarNeighbours(originalSeats, row, column)
+                    // rule n1
+                    val emptySeats = adjacentSeats.filter { it in listOf(FLOOR, FREE) }.size
+                    if (originalSeats[row][column] == FREE && emptySeats == neighbours.size) {
+                        seatsToChange[row][column] = OCCUPIED
+                        changes += 1
+                    }
+
+                    // rule n2
+                    val usedSeats = adjacentSeats.filter { it in listOf(OCCUPIED) }.size
+                    if (originalSeats[row][column] == OCCUPIED && usedSeats >= 5) {
+                        seatsToChange[row][column] = FREE
+                        changes += 1
+                    }
+                }
+            }
+            originalSeats = seatsToChange.map { it.toMutableList() }.toMutableList()
+        } while (changes != 0)
+        return originalSeats.map { line -> line.filter { it == OCCUPIED }.count() }.sum()
+    }
+
+    private fun exploreFarNeighbours(map: List<List<String>>, x: Int, y: Int): List<String> {
+        return neighbours.map { (i, j) ->
+            findFarSeat(map, Pair(x, y), Pair(i, j))
+        }
+    }
+
+    private fun findFarSeat(map: List<List<String>>, current: Pair<Int, Int>, next: Pair<Int, Int>): String {
+        val (x, y) = current
+        val (i, j) = next
+        val seat = listOf(FREE, OCCUPIED)
+        return if (x + i < 0 || y + j < 0) FLOOR
+        else if (x + i > map.size - 1 || y + j > map[0].size - 1) FLOOR
+        else if (map[x + i][y + j] in seat) map[x + i][y + j]
+        else findFarSeat(map, Pair(x + i, y + j), Pair(i, j))
     }
 
 }
