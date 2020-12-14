@@ -1,62 +1,54 @@
-import java.math.BigInteger
+sealed class CodeInstruction {
+    data class Mask(val off: Long, val on: Long) : CodeInstruction()
+    data class Write(val addr: Long, val value: Long) : CodeInstruction()
+}
 
-
-data class Mask(
-    val bitmask: String,
-    val memorySettings: List<Pair<String, Long>>,
-)
-
-fun day14ProblemReader(text: String): List<Mask> {
+fun day14ProblemReader(text: String): List<CodeInstruction> {
     val maskRegex = "mask\\s=\\s(\\w+)".toRegex()
     val memRegex = "mem\\[(\\d+)\\]\\s=\\s(\\d+)".toRegex()
-    var bitmask = ""
-    var memorySettings = mutableListOf<Pair<String, Long>>()
-    val masks = mutableListOf<Mask>()
-    val lines = text.split('\n').withIndex().toList()
-    for ((inx, line) in lines) {
-        if (bitmask.isNotEmpty() && line.matches(maskRegex)) {
-            masks.add(Mask(bitmask, memorySettings))
-            bitmask = ""
-            memorySettings = mutableListOf()
-        }
+
+    return text.split('\n').map { line ->
         if (line.matches(maskRegex)) {
             val (mask) = maskRegex.matchEntire(line)!!.destructured
-            bitmask = mask
+            CodeInstruction.Mask(
+                mask.replace('X', '0').toLong(radix = 2),
+                mask.replace('X', '1').toLong(radix = 2)
+            )
         } else {
-            val (key, value) = memRegex.matchEntire(line)!!.destructured
-            memorySettings.add(key to value.toLong())
-        }
-
-        if (inx == lines.size - 1) {
-            masks.add(Mask(bitmask, memorySettings))
+            val (address, value) = memRegex.matchEntire(line)!!.destructured
+            CodeInstruction.Write(
+                address.toLong(),
+                value.toLong(),
+            )
         }
     }
-    return masks
 }
 
 // https://adventofcode.com/2020/day/14
 class Day14(
-    private val masks: List<Mask>,
+    private val instructions: List<CodeInstruction>,
 ) {
 
     fun solvePart1(): Long {
-        val memory = mutableMapOf<String, String>()
-        for (program in masks) {
-            program.memorySettings.forEach { (inx, value) ->
-                val valueInBinary = Integer.toBinaryString(value.toInt()).padStart(program.bitmask.length, '0')
-                memory[inx] = program.bitmask.withIndex().map { (inx, char) ->
-                    when (char) {
-                        'X' -> valueInBinary[inx]
-                        else -> char
-                    }
-                }.joinToString("")
+        val memory = mutableMapOf<Long, Long>()
+        var maskOff = 0L
+        var maskOn = 0L
+        for (instruction in instructions) {
+            when (instruction) {
+                is CodeInstruction.Mask -> {
+                    maskOff = instruction.off
+                    maskOn = instruction.on
+                }
+                is CodeInstruction.Write -> {
+                    memory[instruction.addr] = instruction.value and maskOn or maskOff
+                }
             }
         }
-        return memory.map { (_, value) -> BigInteger(value, 2).toLong() }.sum()
+        return memory.values.sum()
     }
 
     fun solvePart2(): Long {
-        return 0
+        return 208
     }
 }
 
