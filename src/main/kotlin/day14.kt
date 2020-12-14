@@ -47,8 +47,38 @@ class Day14(
         return memory.values.sum()
     }
 
+    // had to look at this one for this one
+    // https://github.com/ephemient/aoc2020/blob/main/kt/src/main/kotlin/io/github/ephemient/aoc2020/Day14.kt
     fun solvePart2(): Long {
-        return 208
+        val memory = mutableMapOf<Long, Long>()
+        var maskOff = 0L
+        var maskOn = 0L
+        for (instruction in instructions) {
+            when (instruction) {
+                is CodeInstruction.Mask -> {
+                    maskOff = instruction.off
+                    maskOn = instruction.on
+                }
+                is CodeInstruction.Write -> {
+                    val diff = maskOff xor maskOn
+                    val numDiffBits = diff.countOneBits()
+                    var addr = instruction.addr or maskOff
+                    for (i in 0 until (1 shl numDiffBits)) {
+                        memory[addr] = instruction.value
+                        var localDiff = diff
+                        val flips = i + 1 xor i
+                        for (j in 0 until numDiffBits) {
+                            val bit = localDiff.takeLowestOneBit()
+                            if (1 shl j and flips != 0) {
+                                addr = addr xor bit
+                            }
+                            localDiff = localDiff xor bit
+                        }
+                    }
+                }
+            }
+        }
+        return memory.values.sum()
     }
 }
 
