@@ -18,6 +18,6 @@ class Day16(
 
 fun main() {
     val problem = day16ProblemReader(Day14::class.java.getResource("day16.txt").readText())
-    println("solution = ${Day15(problem).solvePart1()}")
-    println("solution part2 = ${Day15(problem).solvePart2()}")
+    println("solution = ${Day16(problem).solvePart1()}")
+    println("solution part2 = ${Day16(problem).solvePart2()}")
 }
