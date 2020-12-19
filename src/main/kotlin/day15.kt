@@ -15,7 +15,8 @@ class Day15(
             if (spokenBefore.isEmpty() || spokenBefore.size == 1) { // rule 1, first time then add 0
                 numbers.add(0)
             } else { // rule 2, add difference of indexes
-                numbers.add((turn - 1) - (spokenBefore[spokenBefore.size - 2].index.toLong() + 1))
+                val (lastTimeSpoken, _) = spokenBefore[spokenBefore.size - 2]
+                numbers.add((turn - 1L) - (lastTimeSpoken + 1L))
             }
         }
         return numbers[2020 - 1]
