@@ -2,7 +2,7 @@ fun day18ProblemReader(text: String): List<String> {
     return text.split(',')
 }
 
-// https://adventofcode.com/2020/day/17
+// https://adventofcode.com/2020/day/18
 class Day18(
     private val initialState: List<String>,
 ) {
