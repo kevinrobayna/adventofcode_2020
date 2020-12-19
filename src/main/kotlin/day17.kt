@@ -17,7 +17,7 @@ class Day17(
 }
 
 fun main() {
-    val problem = day17ProblemReader(Day14::class.java.getResource("day17.txt").readText())
+    val problem = day17ProblemReader(Day17::class.java.getResource("day17.txt").readText())
     println("solution = ${Day17(problem).solvePart1()}")
     println("solution part2 = ${Day17(problem).solvePart2()}")
 }
