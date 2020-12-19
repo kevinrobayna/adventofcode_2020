@@ -1,10 +1,10 @@
-fun day15ProblemReader(text: String): List<String> {
+fun day16ProblemReader(text: String): List<String> {
     return text.split(',')
 }
 
-// https://adventofcode.com/2020/day/15
-class Day15(
-    private val spokenNumbers: List<String>,
+// https://adventofcode.com/2020/day/16
+class Day16(
+    private val tickets: List<String>,
 ) {
 
     fun solvePart1(): Long {
@@ -17,7 +17,7 @@ class Day15(
 }
 
 fun main() {
-    val problem = day15ProblemReader("2,0,1,9,5,19")
+    val problem = day16ProblemReader(Day14::class.java.getResource("day16.txt").readText())
     println("solution = ${Day15(problem).solvePart1()}")
     println("solution part2 = ${Day15(problem).solvePart2()}")
 }
