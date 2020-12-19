@@ -4,7 +4,7 @@ fun day18ProblemReader(text: String): List<String> {
 
 // https://adventofcode.com/2020/day/18
 class Day18(
-    private val initialState: List<String>,
+    private val operations: List<String>,
 ) {
 
     fun solvePart1(): Long {

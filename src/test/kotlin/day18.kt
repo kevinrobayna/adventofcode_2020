@@ -53,7 +53,7 @@ class Day18Test {
 
     @Test
     fun exampleProblemAll_is_solvedCorrectly() {
-        val allExamples = Day17Test::class.java.getResource("example_day18.txt").readText()
+        val allExamples = Day18Test::class.java.getResource("example_day18.txt").readText()
         val problem = day18ProblemReader(allExamples)
         val solution = Day18(problem).solvePart1()
 
