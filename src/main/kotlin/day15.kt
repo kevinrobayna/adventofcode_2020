@@ -7,23 +7,28 @@ class Day15(
     private val spokenNumbers: List<String>,
 ) {
 
-    fun solvePart1(): Long {
-        val numbers = spokenNumbers.map { it.toLong() }.toMutableList()
-        for (turn in (numbers.size + 1)..2020) {
-            val lastSpoken = numbers[turn - 2]
-            val spokenBefore = numbers.withIndex().filter { (_, value) -> value == lastSpoken }
-            if (spokenBefore.isEmpty() || spokenBefore.size == 1) { // rule 1, first time then add 0
-                numbers.add(0)
-            } else { // rule 2, add difference of indexes
-                val (lastTimeSpoken, _) = spokenBefore[spokenBefore.size - 2]
-                numbers.add((turn - 1L) - (lastTimeSpoken + 1L))
-            }
-        }
-        return numbers[2020 - 1]
+    fun solvePart1(): Int {
+        return playRoundsUntil(2020)
     }
 
-    fun solvePart2(): Long {
-        return 0
+    fun solvePart2(): Int {
+        return playRoundsUntil(30000000)
+    }
+
+    private fun playRoundsUntil(lastTurn: Int): Int {
+        val numbers = spokenNumbers.map { it.toInt() }
+        var lastNumber = numbers.last()
+        // because some dark magic this with a map is terribly slow
+        val spokenBefore = IntArray(maxOf(lastTurn, numbers.maxOf { it + 1 }))
+        for ((turn, number) in spokenNumbers.subList(0, spokenNumbers.lastIndex).withIndex()) {
+            spokenBefore[number.toInt()] = turn + 1
+        }
+        for (turn in numbers.size until lastTurn) {
+            val lastTimeSpoken = spokenBefore.get(lastNumber)
+            spokenBefore[lastNumber] = turn
+            lastNumber = if (lastTimeSpoken == 0) 0 else turn - lastTimeSpoken
+        }
+        return lastNumber
     }
 }
 
