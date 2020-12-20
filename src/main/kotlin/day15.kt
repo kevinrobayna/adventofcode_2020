@@ -24,9 +24,9 @@ class Day15(
             spokenBefore[number.toInt()] = turn + 1
         }
         for (turn in numbers.size until lastTurn) {
-            val lastTimeSpoken = spokenBefore.get(lastNumber)
+            val lastTurnSpoken = spokenBefore[lastNumber]
             spokenBefore[lastNumber] = turn
-            lastNumber = if (lastTimeSpoken == 0) 0 else turn - lastTimeSpoken
+            lastNumber = if (lastTurnSpoken == 0) 0 else turn - lastTurnSpoken
         }
         return lastNumber
     }
